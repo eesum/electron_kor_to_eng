@@ -1,0 +1,95 @@
+@import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css');
+
+* {
+    font-family: 'Pretendard Variable', Pretendard, -apple-system,
+        BlinkMacSystemFont, system-ui, Roboto, 'Helvetica Neue', 'Segoe UI',
+        'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic',
+        'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', sans-serif;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+}
+
+h1 {
+    text-align: center;
+}
+
+.content {
+    width: 80%;
+    max-width: 800px;
+    align-self: center;
+    padding-top: 20px;
+}
+
+label {
+    font-size: medium;
+    text-align: center;
+    display: block;
+    padding-bottom: 8px;
+}
+
+.controlArea {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 8px;
+    padding-bottom: 8px;
+}
+
+.convertChoices {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+}
+
+input[type='radio'] {
+    display: none;
+}
+
+label.convertChoice {
+    display: inline-block;
+    font-weight: 600;
+    background-color: #ddd;
+    color: #fff;
+    border-radius: 8px;
+    transition-duration: 0.2s;
+    padding: 8px 12px;
+}
+
+input[type='radio']:checked + label {
+    background-color: cadetblue;
+    color: white;
+}
+
+.resetButton {
+    font-size: 12px;
+    font-weight: 600;
+    color: #888;
+    padding: 4px 8px;
+    border: none;
+    border-radius: 8px;
+    transition-duration: 0.2s;
+}
+
+.resetButton:hover {
+    background-color: #888;
+    color: #fff;
+}
+
+.textBox {
+    font-size: medium;
+    width: 100%;
+    height: 200px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    box-sizing: border-box;
+    resize: none;
+    outline: none;
+}
+
+.textBox::placeholder {
+    color: lightgray;
+}

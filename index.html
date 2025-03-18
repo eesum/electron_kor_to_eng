@@ -1,20 +1,63 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="UTF-8" />
-    <!-- https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP -->
-    <meta
-      http-equiv="Content-Security-Policy"
-      content="default-src 'self'; script-src 'self'"
-    />
-    <meta
-      http-equiv="X-Content-Security-Policy"
-      content="default-src 'self'; script-src 'self'"
-    />
-    <title>Hello from Electron renderer!</title>
-  </head>
-  <body>
-    <h1>Hello from Electron renderer!</h1>
-    <p>👋</p>
-  </body>
+<html lang="ko">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="stylesheet" href="style.css" />
+        <title>한/영 타자 변환기</title>
+    </head>
+    <body>
+        <h1>한/영 타자 변환기</h1>
+        <div class="content">
+            <!-- <label for="inputText">변환할 문구를 입력하세요.</label> -->
+
+            <div class="controlArea">
+                <div class="convertChoices">
+                    <input
+                        type="radio"
+                        name="convertRadio"
+                        class="convertRadio"
+                        id="korToEng"
+                        checked
+                    />
+                    <label for="korToEng" class="convertChoice"
+                        >가나다 → ABC</label
+                    >
+                    <input
+                        type="radio"
+                        name="convertRadio"
+                        class="convertRadio"
+                        id="engToKor"
+                    />
+                    <label for="engToKor" class="convertChoice"
+                        >ABC → 가나다</label
+                    >
+                </div>
+
+                <button class="resetButton">초기화</button>
+            </div>
+            <textarea
+                id="inputText"
+                class="textBox"
+                placeholder="해ㅐㅇ ㅡㅐ구ㅑㅜㅎ"
+                maxlength="1000"
+                spellcheck="false"
+                autocomplete="off"
+                autofocus
+            ></textarea>
+        </div>
+        <div class="content">
+            <div class="labelArea">
+                <label for="outputText">결과</label>
+            </div>
+            <textarea
+                id="outputText"
+                class="textBox"
+                placeholder="당신이 적으려던 것은..."
+                spellcheck="false"
+                readonly
+            ></textarea>
+        </div>
+        <script src="renderer.js"></script>
+    </body>
 </html>
