@@ -1,7 +1,6 @@
 const { app, BrowserWindow, globalShortcut, clipboard } = require('electron')
 const robot = require('robotjs');
 const applescript = require('applescript');
-// const ioHook = require("iohook");
 const { GlobalKeyboardListener } = require("node-global-key-listener");
 const convertType = require('./convertType');
 
@@ -96,8 +95,6 @@ app.whenReady().then(() => {
       });
     }
   });
-
-  // ioHook.start();
 
   // if (!ret) {
   //   console.log('registration failed')
