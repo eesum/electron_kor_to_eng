@@ -23,6 +23,9 @@
     "electron": "^35.0.2"
   },
   "dependencies": {
-    "electron-squirrel-startup": "^1.0.1"
+    "applescript": "^1.0.0",
+    "electron-squirrel-startup": "^1.0.1",
+    "node-global-key-listener": "^0.3.0",
+    "robotjs": "^0.6.0"
   }
 }
