@@ -71,7 +71,7 @@ app.whenReady().then(() => {
 
         console.log('✅ 입력 필드가 포커스됨! 실행 시작');
 
-        robot.keyTap('a', ['command']);
+        robot.keyTap('left', ['command', 'shift']);
         setTimeout(() => {
           robot.keyTap('c', ['command']);
           setTimeout(() => {
