@@ -10,6 +10,11 @@ const tList = "ㄱㄲᆪㄴᆬᆭㄷㄹᆰᆱᆲᆳᆴᆵᆶㅁㅂᆹㅅㅆㅇ�
 const korKey = "ㄱㄲㄴㄷㄸㄹㅁㅂㅃㅅㅆㅇㅈㅉㅊㅋㅌㅍㅎㅏㅐㅑㅒㅓㅔㅕㅖㅗㅛㅜㅠㅡㅣ";
 const engKey = "rRseEfaqQtTdwWczxvgkoiOjpuPhynbml";
 
+// const applescript = require('applescript');
+// const robot = require('robotjs');
+const { spawn } = require('child_process');
+const path = require('path');
+
 function detectLastCharLanguage(word) {
 	const lastValidChar = word.replace(/[^a-zA-Z가-힣]/g, "").slice(-1);
 	// 기호·숫자 제거 후 마지막 글자 가져오기
@@ -21,14 +26,62 @@ function detectLastCharLanguage(word) {
 	return "unknown";
 }
 
+function convertLang() {
+	// const script = `
+	// tell application "System Events"
+	// 	key code 57
+	// end tell`;
+
+	// applescript.execString(script, (err, result) => {
+	// 	if (err) {
+	// 		console.error(`에러 발생: ${err}`);
+	// 		return;
+	// 	}
+	// 	console.log(`AppleScript convertLang 실행 완료: ${result}`);
+	// });
+
+	// const scriptPath = path.join(__dirname, 'script.swift');
+
+	// exec(`swift ${scriptPath}`, (error, stdout, stderr) => {
+	// 	if (error) {
+	// 		console.error(`Error executing script: ${error.message}`);
+	// 		return;
+	// 	}
+	// 	if (stderr) {
+	// 		console.error(`stderr: ${stderr}`);
+	// 		return;
+	// 	}
+	// 	console.log(`stdout: ${stdout}`);
+	// });
+
+	const scriptPath = path.join(__dirname, 'script_executable'); // 최적화된 실행 파일 사용
+	const swiftProcess = spawn(scriptPath);
+
+	swiftProcess.stdout.on('data', (data) => {
+		console.log(`stdout: ${data}`);
+	});
+
+	swiftProcess.stderr.on('data', (data) => {
+		console.error(`stderr: ${data}`);
+	});
+
+	swiftProcess.on('close', (code) => {
+		console.log(`Swift process exited with code ${code}`);
+	});
+}
+
 function convertType(lastWord) {
 	let output;
 
-	if (detectLastCharLanguage(lastWord) === 'korean')
+	if (detectLastCharLanguage(lastWord) === 'korean') {
+		convertLang();
 		output = korToEng(lastWord);
-	else if (detectLastCharLanguage(lastWord) === 'english')
+		// robot.keyTap('capslock');
+	} else if (detectLastCharLanguage(lastWord) === 'english') {
+		convertLang();
 		output = engToKor(lastWord);
-	else
+		// robot.keyTap('capslock');
+	} else
 		output = lastWord;
 
 	return output;
