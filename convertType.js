@@ -21,7 +21,7 @@ function detectLastCharLanguage(word) {
 
 	if (!lastValidChar) return "unknown";
 	if (/[a-zA-Z]/.test(lastValidChar)) return "english";
-	if (/[가-힣]/.test(lastValidChar)) return "korean";
+	if (/[ㄱ-ㅣ가-힣]/.test(lastValidChar)) return "korean";
 
 	return "unknown";
 }
