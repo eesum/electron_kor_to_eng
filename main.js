@@ -1,18 +1,82 @@
-const { app, BrowserWindow, globalShortcut, clipboard } = require('electron')
+const { app, BrowserWindow, globalShortcut, clipboard, Tray, Menu } = require('electron')
 const robot = require('robotjs');
 const applescript = require('applescript');
 // const { GlobalKeyboardListener } = require("node-global-key-listener");
 const convertType = require('./convertType');
-
+const path = require('path');
 // const v = new GlobalKeyboardListener();
 
+let win;
+let tray = null;
+
 const createWindow = () => {
-  const win = new BrowserWindow({
+  if (win) {
+    win.show();
+    return;
+  }
+
+  win = new BrowserWindow({
     width: 1000,
     height: 800
   })
 
   win.loadFile('index.html')
+
+  win.on('closed', () => {
+    win = null;
+  });
+}
+
+function createTray() {
+  if (!tray) {
+
+    tray = new Tray(path.join(__dirname, 'icon.png'));
+
+    const contextMenu = Menu.buildFromTemplate([
+      {
+        label: 'Auto Convert',
+        click: () => {
+          //이대로 복사해서 감지, 변경
+        }
+      },
+      {
+        label: 'ENG to KOR in selection',
+        click: () => {
+          // 이대로 복사해서 engToKor 로직 돌리기
+        }
+      },
+      {
+        label: 'KOR to ENG in selection',
+        click: () => {
+          // 이대로 복사해서 korToEng 로직 돌리기
+
+          // 왼쪽으로 선택한다음 복사해서
+          // 마지막 단어 추출한다음 감지해서 변경하고
+          // 대치해서 replace 해야함
+        }
+      },
+      {
+        label: 'Open window',
+        click: () => {
+          createWindow();
+        }
+      },
+      {
+        label: 'Quit',
+        click: () => {
+          app.isQuittiing = true;
+          app.quit();
+        }
+      }
+    ])
+
+    tray.setContextMenu(contextMenu);
+    tray.setToolTip('Key Converter');
+
+    // tray.on('click', () => {
+    //   createWindow();
+    // })
+  }
 }
 
 function isTextFieldFocused(callback) {
@@ -50,7 +114,8 @@ function replaceLastWord(text) {
 }
 
 app.whenReady().then(() => {
-  createWindow()
+  createWindow();
+  createTray();
 
   app.on('activate', () => {
     if (BrowserWindow.getAllWindows().length === 0) {
@@ -100,18 +165,27 @@ app.whenReady().then(() => {
   if (!ret) {
     console.log('registration failed')
   }
-
-  console.log(globalShortcut.isRegistered('CommandOrControl+E'))
 })
 
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {
-    app.quit()
+    app.quit();
   }
 })
 
 app.on('will-quit', () => {
-  console.log('unregistered!')
-  globalShortcut.unregister('CommandOrControl+E')
+  if (globalShortcut.isRegistered('CommandOrControl+E')) {
+    globalShortcut.unregister('CommandOrControl+E');
+  }
+
+
   globalShortcut.unregisterAll()
+  console.log('unregistered!')
+})
+
+app.on('before-quit', () => {
+
+  if (tray) {
+    tray.destroy();
+  }
 })
