@@ -1,8 +1,6 @@
 const { app, BrowserWindow, globalShortcut, Tray, Menu } = require('electron')
-// const { GlobalKeyboardListener } = require("node-global-key-listener");
 const { autoConvert, autoConvertSelection, engToKorSelection, korToEngSelection } = require('./features');
 const path = require('path');
-// const v = new GlobalKeyboardListener();
 
 let win;
 let tray = null;
@@ -82,17 +80,8 @@ function createTray() {
 
     tray.setContextMenu(contextMenu);
     tray.setToolTip('Key Converter');
-
-    // tray.on('click', () => {
-    //   createWindow();
-    // })
   }
 }
-
-
-
-
-
 
 app.whenReady().then(() => {
   createWindow();
@@ -108,19 +97,6 @@ app.whenReady().then(() => {
   globalShortcut.register('CmdOrCtrl+Shift+X', autoConvertSelection);
   globalShortcut.register('CmdOrCtrl+Shift+E', engToKorSelection);
   globalShortcut.register('CmdOrCtrl+Shift+S', korToEngSelection);
-
-  // const ret = globalShortcut.register('CommandOrControl+E', () => {
-  //   console.log('shortcut pressed')
-  //   // v.addListener(event => {
-  //   // if ((event.name === "SPACE" || event.name === "ENTER") && event.state === "UP") {
-  //   // console.log('whitespace pressed')
-  //   autoConvert();
-  //   // }
-  // });
-
-  // if (!ret) {
-  //   console.log('registration failed')
-  // }
 })
 
 app.on('window-all-closed', () => {
@@ -130,11 +106,6 @@ app.on('window-all-closed', () => {
 })
 
 app.on('will-quit', () => {
-  // if (globalShortcut.isRegistered('CommandOrControl+E')) {
-  //   globalShortcut.unregister('CommandOrControl+E');
-  // }
-
-
   globalShortcut.unregisterAll()
   console.log('unregistered!')
 })
