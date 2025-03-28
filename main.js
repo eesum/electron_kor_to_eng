@@ -1,8 +1,6 @@
-const { app, BrowserWindow, globalShortcut, clipboard, Tray, Menu } = require('electron')
-const robot = require('robotjs');
-const applescript = require('applescript');
+const { app, BrowserWindow, globalShortcut, Tray, Menu } = require('electron')
 // const { GlobalKeyboardListener } = require("node-global-key-listener");
-const convertType = require('./convertType');
+const { autoConvert, autoConvertSelection, engToKorSelection, korToEngSelection } = require('./features');
 const path = require('path');
 // const v = new GlobalKeyboardListener();
 
@@ -34,32 +32,44 @@ function createTray() {
 
     const contextMenu = Menu.buildFromTemplate([
       {
-        label: 'Auto Convert',
+        label: 'Auto Convert Last Word',
+        accelerator: 'CmdOrCtrl+Shift+P',
         click: () => {
-          //이대로 복사해서 감지, 변경
+          autoConvert();
         }
       },
       {
-        label: 'ENG to KOR in selection',
+        label: 'Auto Convert Selection',
+        accelerator: 'CmdOrCtrl+Shift+X',
         click: () => {
-          // 이대로 복사해서 engToKor 로직 돌리기
+          autoConvertSelection();
         }
       },
       {
-        label: 'KOR to ENG in selection',
+        label: 'ENG to KOR Selection',
+        accelerator: 'CmdOrCtrl+Shift+E',
         click: () => {
-          // 이대로 복사해서 korToEng 로직 돌리기
-
-          // 왼쪽으로 선택한다음 복사해서
-          // 마지막 단어 추출한다음 감지해서 변경하고
-          // 대치해서 replace 해야함
+          engToKorSelection();
         }
       },
       {
-        label: 'Open window',
+        label: 'KOR to ENG Selection',
+        accelerator: 'CmdOrCtrl+Shift+S',
+        click: () => {
+          korToEngSelection();
+        }
+      },
+      {
+        type: 'separator'
+      },
+      {
+        label: 'Open Window',
         click: () => {
           createWindow();
         }
+      },
+      {
+        type: 'separator'
       },
       {
         label: 'Quit',
@@ -79,39 +89,10 @@ function createTray() {
   }
 }
 
-function isTextFieldFocused(callback) {
-  const script = `
-  tell application "System Events"
-      tell (first application process whose frontmost is true)
-          try
-              set focusedElement to value of attribute "AXFocusedUIElement"
-              set roleDesc to value of attribute "AXRoleDescription" of focusedElement
-              if roleDesc is "text field" or roleDesc is "text entry area" then
-                  return "true"
-              else
-                  return "false"
-              end if
-          on error
-              return "false"
-          end try
-      end tell
-  end tell
-  `;
-
-  applescript.execString(script, (err, result) => {
-    if (err) {
-      console.error("AppleScript 실행 오류:", err);
-      callback(false);
-    } else {
-      callback(result.trim() === "true");
-    }
-  });
-}
 
 
-function replaceLastWord(text) {
-  return text.replace(/(\S+)(\s*)$/, (_, lastWord, spaces) => convertType(lastWord) + spaces);
-}
+
+
 
 app.whenReady().then(() => {
   createWindow();
@@ -123,48 +104,23 @@ app.whenReady().then(() => {
     }
   })
 
-  const ret = globalShortcut.register('CommandOrControl+E', () => {
-    console.log('shortcut pressed')
-    // v.addListener(event => {
-    // if ((event.name === "SPACE" || event.name === "ENTER") && event.state === "UP") {
-    // console.log('whitespace pressed')
-    isTextFieldFocused((focused) => {
-      if (!focused) {
-        console.log('⚠️ 입력 필드가 포커스되지 않음! 실행 취소');
-        return;
-      }
+  globalShortcut.register('CmdOrCtrl+Shift+P', autoConvert);
+  globalShortcut.register('CmdOrCtrl+Shift+X', autoConvertSelection);
+  globalShortcut.register('CmdOrCtrl+Shift+E', engToKorSelection);
+  globalShortcut.register('CmdOrCtrl+Shift+S', korToEngSelection);
 
-      console.log('✅ 입력 필드가 포커스됨! 실행 시작');
+  // const ret = globalShortcut.register('CommandOrControl+E', () => {
+  //   console.log('shortcut pressed')
+  //   // v.addListener(event => {
+  //   // if ((event.name === "SPACE" || event.name === "ENTER") && event.state === "UP") {
+  //   // console.log('whitespace pressed')
+  //   autoConvert();
+  //   // }
+  // });
 
-      robot.keyTap('left', ['command', 'shift']);
-      setTimeout(() => {
-        robot.keyTap('c', ['command']); // 복사
-      }, 50);
-
-      setTimeout(() => {
-        let text = clipboard.readText().trim();
-        console.log('Clipboard Text:', text);
-
-        if (!text) {
-          console.log('⚠️ 클립보드가 비어 있음!');
-          return;
-        }
-
-        let modifiedText = replaceLastWord(text);
-        console.log('Modified Text:', modifiedText);
-        clipboard.writeText(modifiedText);
-
-        setTimeout(() => {
-          robot.keyTap('v', ['command']); // 붙여넣기
-        }, 50);
-      }, 100);
-    });
-    // }
-  });
-
-  if (!ret) {
-    console.log('registration failed')
-  }
+  // if (!ret) {
+  //   console.log('registration failed')
+  // }
 })
 
 app.on('window-all-closed', () => {
@@ -174,9 +130,9 @@ app.on('window-all-closed', () => {
 })
 
 app.on('will-quit', () => {
-  if (globalShortcut.isRegistered('CommandOrControl+E')) {
-    globalShortcut.unregister('CommandOrControl+E');
-  }
+  // if (globalShortcut.isRegistered('CommandOrControl+E')) {
+  //   globalShortcut.unregister('CommandOrControl+E');
+  // }
 
 
   globalShortcut.unregisterAll()

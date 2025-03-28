@@ -414,4 +414,4 @@ function composeAndPrint(lvt) {
 	return result;
 }
 
-module.exports = convertType;
+module.exports = { convertType, engToKor, korToEng };
