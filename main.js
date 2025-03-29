@@ -1,5 +1,5 @@
-const { app, BrowserWindow, globalShortcut, Tray, Menu } = require('electron')
-const { autoConvert, autoConvertSelection, engToKorSelection, korToEngSelection } = require('./features');
+const { app, BrowserWindow, globalShortcut, Tray, Menu, ipcMain } = require('electron')
+const { engToKor, korToEng } = require('./convertType');
 const path = require('path');
 
 let win;
@@ -13,7 +13,10 @@ const createWindow = () => {
 
   win = new BrowserWindow({
     width: 1000,
-    height: 800
+    height: 800,
+    webPreferences: {
+      preload: path.join(__dirname, 'preload.js')
+    }
   })
 
   win.loadFile('index.html')
@@ -82,6 +85,14 @@ function createTray() {
     tray.setToolTip('Key Converter');
   }
 }
+
+ipcMain.handle('convert:engToKor', (event, word) => {
+  return engToKor(word);
+})
+
+ipcMain.handle('convert:korToEng', (event, word) => {
+  return korToEng(word);
+})
 
 app.whenReady().then(() => {
   createWindow();

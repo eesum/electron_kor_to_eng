@@ -1,4 +1,3 @@
-const { korToEng, engToKor } = require('./convertType');
 const radioButtons = document.querySelectorAll('.convertRadio');
 const inputText = document.getElementById('inputText');
 const outputText = document.getElementById('outputText');
@@ -35,15 +34,16 @@ async function copyToClipboard() {
 	}
 }
 
-function convertText() {
+async function convertText() {
 	const convertOption = document.querySelector('.convertRadio:checked').id;
-	const input = inputText.value
+	const input = inputText.value;
 	let output;
 
 	if (convertOption === 'korToEng')
-		output = korToEng(input);
+		output = await window.convert.korToEng(input);
 	else
-		output = engToKor(input);
+		output = await window.convert.engToKor(input);
 
 	outputText.value = output;
 }
+
