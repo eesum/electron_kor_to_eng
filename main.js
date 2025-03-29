@@ -1,4 +1,5 @@
 const { app, BrowserWindow, globalShortcut, Tray, Menu, ipcMain } = require('electron')
+const { autoConvert, autoConvertLine, autoConvertSelection, engToKorSelection, korToEngSelection } = require('./features');
 const { engToKor, korToEng } = require('./convertType');
 const path = require('path');
 
@@ -37,6 +38,13 @@ function createTray() {
         accelerator: 'CmdOrCtrl+Shift+P',
         click: () => {
           autoConvert();
+        }
+      },
+      {
+        label: 'Auto Convert Current Line',
+        accelerator: 'CmdOrCtrl+Shift+L',
+        click: () => {
+          autoConvertLine();
         }
       },
       {
@@ -105,6 +113,7 @@ app.whenReady().then(() => {
   })
 
   globalShortcut.register('CmdOrCtrl+Shift+P', autoConvert);
+  globalShortcut.register('CmdOrCtrl+Shift+L', autoConvertLine);
   globalShortcut.register('CmdOrCtrl+Shift+X', autoConvertSelection);
   globalShortcut.register('CmdOrCtrl+Shift+E', engToKorSelection);
   globalShortcut.register('CmdOrCtrl+Shift+S', korToEngSelection);
