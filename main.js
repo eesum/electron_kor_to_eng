@@ -75,6 +75,7 @@ function createTray() {
         label: 'Open Window',
         click: () => {
           createWindow();
+          app.dock.show();
         }
       },
       {
@@ -108,7 +109,8 @@ app.whenReady().then(() => {
 
   app.on('activate', () => {
     if (BrowserWindow.getAllWindows().length === 0) {
-      createWindow()
+      createWindow();
+      app.dock.show();
     }
   })
 
@@ -123,6 +125,7 @@ app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {
     app.quit();
   }
+  app.dock.hide();
 })
 
 app.on('will-quit', () => {
