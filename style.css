@@ -59,7 +59,7 @@ label.convertChoice {
 }
 
 input[type='radio']:checked + label {
-    background-color: cadetblue;
+    background-color: #8263ff;
     color: white;
 }
 
