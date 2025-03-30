@@ -3,8 +3,12 @@ const { FuseV1Options, FuseVersion } = require('@electron/fuses');
 
 module.exports = {
   packagerConfig: {
+    name: 'Key Converter'
     asar: true,
     icon: './AppIcon',
+    extraResource: [
+      './script_executable'
+    ]
   },
   rebuildConfig: {},
   makers: [

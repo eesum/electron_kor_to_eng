@@ -24,7 +24,12 @@ function detectLastCharLanguage(word) {
 }
 
 function convertLang() {
-	const scriptPath = path.join(__dirname, 'script_executable'); // 최적화된 실행 파일 사용
+	const scriptPath = path.join(process.resourcesPath, 'script_executable');
+	try {
+		require('child_process').execSync(`chmod +x "${executablePath}"`);
+	} catch (error) {
+		console.error('Failed to set executable permission:', error);
+	}
 	const swiftProcess = spawn(scriptPath);
 
 	swiftProcess.stdout.on('data', (data) => {
@@ -256,7 +261,7 @@ function engToKor(lastWord) {
 					lvt.t = 17;
 				else {
 					result += composeAndPrint(lvt);
-					lvt.l = lList.indexOf(tList[tempT]);
+					lvt.l = lList.indexOf(char);
 				}
 			}
 		} else { // 모음
