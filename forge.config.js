@@ -3,7 +3,7 @@ const { FuseV1Options, FuseVersion } = require('@electron/fuses');
 
 module.exports = {
   packagerConfig: {
-    name: 'Key Converter'
+    name: 'Key Converter',
     asar: true,
     icon: './AppIcon',
     extraResource: [
@@ -28,6 +28,13 @@ module.exports = {
       name: '@electron-forge/maker-rpm',
       config: {},
     },
+    // {
+    //   name: '@electron-forge/maker-dmg',
+    //   config: {
+    //     background: './assets/dmg-background.png',
+    //     format: 'ULFO'
+    //   }
+    // },
   ],
   plugins: [
     {
