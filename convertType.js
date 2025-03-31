@@ -24,12 +24,13 @@ function detectLastCharLanguage(word) {
 }
 
 function convertLang() {
-	const scriptPath = path.join(process.resourcesPath, 'script_executable');
-	try {
-		require('child_process').execSync(`chmod +x "${executablePath}"`);
-	} catch (error) {
-		console.error('Failed to set executable permission:', error);
-	}
+	const scriptPath = path.join(__dirname, 'script_executable');
+	// const scriptPath = path.join(process.resourcesPath, 'script_executable');
+	// try {
+	// 	require('child_process').execSync(`chmod +x "${executablePath}"`);
+	// } catch (error) {
+	// 	console.error('Failed to set executable permission:', error);
+	// }
 	const swiftProcess = spawn(scriptPath);
 
 	swiftProcess.stdout.on('data', (data) => {
