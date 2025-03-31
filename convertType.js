@@ -14,7 +14,7 @@ const { spawn } = require('child_process');
 const path = require('path');
 
 function detectLastCharLanguage(word) {
-	const lastValidChar = word.replace(/[^a-zA-Z가-힣]/g, "").slice(-1);
+	const lastValidChar = word.replace(/[^a-zA-Zㄱ-ㅣ가-힣]/g, "").slice(-1);
 
 	if (!lastValidChar) return "unknown";
 	if (/[a-zA-Z]/.test(lastValidChar)) return "english";
